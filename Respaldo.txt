@@ -1,0 +1,69 @@
+create table campeonato(
+    id_campeonato  varchar (12) primary key ,
+    nombre_campeonato varchar (30) not null,
+    sede varchar (20) not null
+);
+create table equipo(
+    id_equipo varchar (12) primary key,
+    nombre_equipo varchar (30) not null,
+    categoria varchar (7) not null,
+    id_campeonato varchar (12),
+    foreign key (id_campeonato) references campeonato(id_campeonato)
+);
+create table jugador (
+    id_jugador varchar (12) primary key,
+    nombres varchar (30) not null,
+    apellidos varchar (50) not null,
+    ci varchar (15),
+    edad integer,
+    id_equipo varchar (12),
+    foreign key (id_equipo) references equipo(id_equipo)
+);
+insert into campeonato (id_campeonato, nombre_campeonato, sede)
+values ('camp-111', 'Campeonato Unifranz', 'El Alto');
+insert into campeonato (id_campeonato, nombre_campeonato, sede)
+values ('camp-222', 'Campeonato Unifranz', 'Cochabamba');
+insert into equipo (id_equipo, nombre_equipo, categoria, id_campeonato)
+values ('equ-111', 'Google', 'VARONES', 'camp-111');
+insert into equipo (id_equipo, nombre_equipo, categoria, id_campeonato)
+values ('equ-222', '404 Not found', 'VARONES', 'camp-111');
+insert into equipo (id_equipo, nombre_equipo, categoria, id_campeonato)
+values ('equ-333', 'Girls Unifranz', 'MUJERES', 'camp-111');
+insert into jugador (id_jugador, nombres, apellidos, ci, edad, id_equipo)
+values ('jug-111', 'Carlos', 'Villa', '8997811LP', 19, 'equ-222');
+insert into jugador (id_jugador, nombres, apellidos, ci, edad, id_equipo)
+values ('jug-222', 'Pedro', 'Salas', '8997822LP', 20, 'equ-222');
+insert into jugador (id_jugador, nombres, apellidos, ci, edad, id_equipo)
+values ('jug-333', 'Saul', 'Araj', '8997833LP', 21, 'equ-222');
+insert into jugador (id_jugador, nombres, apellidos, ci, edad, id_equipo)
+values ('jug-444', 'Sandra', 'Solis', '8997844LP', 20, 'equ-333');
+insert into jugador (id_jugador, nombres, apellidos, ci, edad, id_equipo)
+values ('jug-555', 'Ana', 'Mica', '8997855LP', 23, 'equ-333');
+
+select jug.nombres, jug.apellidos
+from equipo as equ, jugador as jug
+where equ.id_equipo = 'equ-222' and
+      equ.id_equipo =jug.id_equipo;
+select jug.nombres, jug.apellidos
+from equipo as equ, jugador as jug
+where equ.id_equipo = 'equ-333' and
+      equ.id_equipo =jug.id_equipo;
+select jug.nombres, jug.apellidos, jug.edad
+from jugador as jug
+where jug.edad>=21;
+select equ.nombre_equipo, equ.categoria, equ.id_campeonato
+from equipo as equ
+where equ.id_campeonato='camp-111' and equ.categoria='MUJERES';
+select equ.nombre_equipo
+from jugador as jug, equipo as equ
+where jug.id_jugador = 'jug-333' and
+      jug.id_equipo=equ.id_equipo;
+select cam.nombre_campeonato
+from jugador as jug, campeonato as cam, equipo as equ
+where jug.id_jugador = 'jug-333' and
+      jug.id_equipo=equ.id_equipo and
+      equ.id_campeonato=cam.id_campeonato;
+select jug.nombres, jug.apellidos
+from jugador as jug, equipo as equ
+where equ.categoria='VARONES' and
+      equ.id_equipo=jug.id_equipo;
