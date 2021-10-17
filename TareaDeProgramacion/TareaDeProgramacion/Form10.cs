@@ -16,5 +16,23 @@ namespace TareaDeProgramacion
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            double A = Convert.ToDouble(textBox1.Text);
+            double B = Convert.ToDouble(textBox1.Text);
+
+            double v = 0;
+
+            v = A / B;
+
+            textBox3.Text = "La velocidad es: " + v.ToString() + " m/s";
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
     }
 }
