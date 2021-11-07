@@ -1,0 +1,140 @@
+Create database ProyectobaseProgra;
+go
+
+use ProyectobaseProgra;
+go
+
+create table usuario (
+    id_usuario int primary key identity,
+    usuario varchar (50),
+    contra varchar (50),
+    telefono int,
+    correo varchar (50),
+    nombres varchar(50),
+    apellidos varchar (50)
+);
+
+create table datos_paciente(
+    ci_pacientes varchar(20) primary key ,
+    nombres varchar(50) ,
+    apellidos varchar(50) ,
+    edad int ,
+    genero varchar (1),
+    ocupacion varchar (50),
+    lugar_nacimiento varchar(70),
+    domicilio varchar(50),
+    motivo_consulta varchar (200),
+    telefono int,
+    fecha_nacimiento varchar (20),
+    nombre_tutor varchar(50),
+);
+
+create table antecedentes_patologico (
+    id_antecedente_patologico int primary key identity ,
+    alergias varchar (2),
+    hemorragias varchar(2),
+    alteracion_en_la_cicatrizacion varchar(2),
+    traumatismos_craneo_faciales varchar(2),
+    experiencias_previas_de_exodoncia varchar (2),
+    paciente_aparentemente_sano varchar(2),
+    ci_pacientes varchar(20) ,
+    foreign key (ci_pacientes) references datos_paciente(ci_pacientes),
+);
+
+create table observaciones_patologicas (
+    id_obsaervaciones_patologicas int primary key identity ,
+    traumatismos_craneo_faciales_obs varchar(50),
+    experiencias_previas_de_exodoncia_obs varchar (50),
+    paciente_aparentemente_sano_obs varchar (50),
+    id_antecedentes_patologicos int,
+    foreign key (id_antecedentes_patologicos) references antecedentes_patologico (id_antecedente_patologico)
+);
+
+create table antecedentes_no_patologicos (
+    id_antecedentes_nopatologicos int primary key identity,
+    onicofagia varchar (2),
+    queilofagia varchar (2),
+    sufre_de_bruxismo varchar (2),
+    mordisqueo_de_objetos varchar (2),
+    respirador_bucal varchar (2),
+    inteposicion_lingual varchar (2),
+    otros varchar (50),
+    ci_pacientes varchar(20) ,
+    foreign key (ci_pacientes) references datos_paciente(ci_pacientes),
+);
+
+create table dientes (
+    id_dientes int primary key identity ,
+    numero_dientes int,
+    color_diente varchar (4),
+    ci_pacientes varchar(20) ,
+    foreign key (ci_pacientes) references datos_paciente(ci_pacientes),
+);
+create table observaciones (
+    id_observaciones int primary key identity,
+    observaciones varchar (500),
+    ci_pacientes varchar(20) ,
+    foreign key (ci_pacientes) references datos_paciente(ci_pacientes),
+);
+
+Create table datos_paciente_doctor (
+	id_datos_paciente_doctor int primary key identity ,
+	costo varchar (50) ,
+	tiempo_tratamiento varchar (50),
+	fecha_dia varchar (20) ,
+	tipo_tratamiento varchar (200),
+	anotaciones varchar (200),
+	ci_pacientes varchar (20) ,
+	foreign key (ci_pacientes) references datos_paciente (ci_pacientes)
+);
+go
+create view usuario_login as
+    select us.usuario, us.contra
+    from usuario as us
+go
+
+create or alter proc validar
+@usuario varchar (50),
+@contrasena varchar (50)
+as
+    begin
+        select ul.*
+        from usuario_login as ul
+        where ul.usuario = @usuario and ul.contra = @contrasena
+    end
+go
+
+exec validar 'MijaelR', 'mijaelr1234'
+go
+
+insert into usuario(usuario, contra, telefono, correo, nombres, apellidos)
+values ('MijaelR','mijaelr2003', 60121247,'mijaelrojas67@gmail.com','Mijael Jhonatan', 'Rojas Arias'),
+       ('GroberR','grober2000', 70560909,'groberrojaschoque@gmail.com','Grober', 'Rojas Choque'),
+       ('MassielR', 'massielr2009', 63114605, 'massielrojas2009@gmail.com', 'Massiel Yelena', 'Rojas Arias');
+go
+
+select ul.*
+from datos_paciente_doctor as ul
+go
+
+insert into datos_paciente (ci_pacientes, nombres, apellidos, edad, genero, ocupacion, lugar_nacimiento, domicilio, motivo_consulta, telefono, fecha_nacimiento, nombre_tutor)
+values ('1324657 LP','Jhamil Max', 'Rojas Rojas', 20, 'M', 'Programador', 'Nuestra Señora de La Paz', '2 de Abril', 'Consulta', 1324678, '12/02/2000','Luis Fermando Rojas')
+
+insert into antecedentes_patologico (alergias, hemorragias, alteracion_en_la_cicatrizacion, traumatismos_craneo_faciales, experiencias_previas_de_exodoncia, paciente_aparentemente_sano, ci_pacientes)
+values ('No','No', 'No', 'No', 'No', 'Si', '1324657 LP')
+
+insert into observaciones_patologicas (traumatismos_craneo_faciales_obs, experiencias_previas_de_exodoncia_obs, paciente_aparentemente_sano_obs, id_antecedentes_patologicos)
+values ('No padece de nada', 'No padece de nada', 'No padece de nada', 1)
+
+insert into datos_paciente_doctor (costo, tiempo_tratamiento, fecha_dia, tipo_tratamiento, anotaciones, ci_pacientes)
+values ('100 bs', '1 semana', '06/11/2021', 'Consulta', 'Varias cosas que hacer', '1324657 LP')
+
+insert into observaciones (observaciones, ci_pacientes)
+values ('No hay obsaervaciones', '1324657 LP')
+
+insert into  antecedentes_no_patologicos (onicofagia, queilofagia, sufre_de_bruxismo, mordisqueo_de_objetos, respirador_bucal, inteposicion_lingual, otros, ci_pacientes)
+values ('No', 'No', 'No', 'No', 'No', 'No', 'NO', '1324657 LP')
+
+insert into dientes (numero_color_diente, ci_pacientes)
+values ('35 Rojo - 11 Azul', '1324657 Lp')
+go
