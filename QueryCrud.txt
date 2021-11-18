@@ -1,0 +1,51 @@
+create database crud;
+go
+use crud;
+go
+
+create table alumnos
+(
+    id_alumnos int primary key identity,
+    nombres varchar(30) ,
+    apellidos varchar(30),
+    curso varchar(20),
+);
+go
+insert into alumnos(nombres, apellidos, curso) values
+('Alex', 'Ramos', 'Programacion'),
+('Rocio', 'Maldonado', 'Fisica II'),
+('Luis', 'Cespedes', 'Calculo III');
+go
+create table usuario (
+    id_usuario int primary key identity,
+    usuario varchar (50),
+    contra varchar (50),
+    telefono int,
+    correo varchar (50),
+    nombres varchar(50),
+    apellidos varchar (50)
+);
+go
+create view usuario_login as
+    select us.usuario, us.contra
+    from usuario as us
+go
+create or alter proc validar
+@usuario varchar (50),
+@contrasena varchar (50)
+as
+    begin
+        select ul.*
+        from usuario_login as ul
+        where ul.usuario = @usuario and ul.contra = @contrasena
+    end
+go
+
+exec validar 'MijaelR', 'mijaelr2003'
+go
+
+insert into usuario(usuario, contra, telefono, correo, nombres, apellidos)
+values ('MijaelR','mijaelr2003', 60121247,'mijaelrojas67@gmail.com','Mijael Jhonatan', 'Rojas Arias'),
+       ('GroberR','grober2000', 70560909,'groberrojaschoque@gmail.com','Grober', 'Rojas Choque'),
+       ('MassielR', 'massielr2009', 63114605, 'massielrojas2009@gmail.com', 'Massiel Yelena', 'Rojas Arias');
+go
